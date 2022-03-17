@@ -5,7 +5,7 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'production',
-  entry: './src/index.tsx',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
@@ -26,11 +26,11 @@ module.exports = {
         test: /\.svg$/,
         type: 'asset/resource',
       },
-      {
-        test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
+      // {
+      //   test: /\.(ts|tsx)$/,
+      //   use: 'ts-loader',
+      //   exclude: /node_modules/,
+      // },
     ],
   },
   resolve: {
@@ -44,7 +44,8 @@ module.exports = {
       files: 'src/{**/*,*}.css',
     }),
     new ESLintPlugin({
-      files: 'src/{**/*,*}.{tsx,ts}',
+      //files: 'src/{**/*,*}.{tsx,ts}',
+      files: 'src/{**/*,*}.{js}',
     }),
   ],
   devServer: {
