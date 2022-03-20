@@ -9,11 +9,12 @@ const useStyles =makeStyles({
     height: '100%',
     overflow: 'hidden',
     width: '100%',
-    padding:"40px"
+    padding:"10px"
   },
   container:{
-   // margin: "20px",
-    background: red[100],
+    marginBottom: "60px",
+    marginTop: "60px",
+   // background: red[100],
 
 
   }

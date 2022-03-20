@@ -72,8 +72,6 @@ export  const TodoList = ()=>{
         }
         open={openModal}
         setOpen={setOpenModal}/>
-      <p>TodoList Page</p>
-
       <Input value={value} setValue={setValue} submit={addNewTodo} button={"Add"}/>
       <List sx={{ width: "100%",  bgcolor: "background.paper" }}>
         {todoList.map((item) => {
