@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import {Input} from "../Input/Input";
+import {Modal} from "../Modal/Modal";
 
 
 import Checkbox from "@mui/material/Checkbox";
@@ -10,23 +11,21 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import "@fontsource/roboto/300.css";
 import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
 
 
 
 export  const TodoList = ()=>{
   const [todoList, setTodoList] = useState([]);
+  const [openModal, setOpenModal] = React.useState(false);
   const [value, setValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+
 
   const[todoToEdit, setTodoToEdit]=useState("");
    const[todoToEditTrans, setTodoToEditTrans]=useState("");
 
   const addNewTodo=(e)=>{
-    if (value===""){
-      setErrorMessage("todo can't be empty");
-    }else{
-      setErrorMessage("");
       setTodoList(prevState=>[...prevState, {
         "userId":4,
         "todoId":Math.floor(Math.random()*100)+1, // change it!
@@ -35,7 +34,6 @@ export  const TodoList = ()=>{
       }
       ]);
       setValue('');
-    }
     e.preventDefault();
 
   }
@@ -52,55 +50,63 @@ export  const TodoList = ()=>{
   const editTodoClick = (todo) => {
     setTodoToEdit(todo);
     setTodoToEditTrans(todo.description);
+    setOpenModal(true);
   };
   const saveEditedTodo=(e)=>{
-    setTodoList((prevState) => [...prevState.map((todo)=> todo.todoId === todoToEdit.todoId? {...todo, description: todoToEditTrans}: todo)]);
-    setTodoToEdit('');
-    setTodoToEditTrans('');
+      setTodoList((prevState) => [...prevState.map((todo)=> todo.todoId === todoToEdit.todoId? {...todo, description: todoToEditTrans}: todo)]);
+      setTodoToEdit('');
+      setTodoToEditTrans('');
+      setOpenModal(false);
     e.preventDefault();
   }
   return (
     <>
+      <Modal
+        component={
+        <Input
+          value={todoToEditTrans}
+          setValue={setTodoToEditTrans}
+          submit={(e)=>{saveEditedTodo(e)}}
+          button={"Save"}
+         />
+        }
+        open={openModal}
+        setOpen={setOpenModal}/>
       <p>TodoList Page</p>
-      <p>{errorMessage}</p>
-      <Input value={value} setValue={setValue} submit={addNewTodo} button={"Add"}/>
-      <List sx={{ width: "100%", maxWidth: 800, bgcolor: "background.paper" }}>
-        {todoList.map((item) => {
-          const displayTodo = item.todoId ===todoToEdit.todoId?
-             <Input value={todoToEditTrans} setValue={setTodoToEditTrans} submit={(e)=>{saveEditedTodo(e)}} button={"Save"} />:
-            `${item.description}-${item.status}-${item.todoId}`;
-          const displayCheckbox = item.todoId ===todoToEdit.todoId? '':
-                    <Checkbox
-                    edge="start"
-                    color="success"
-                    sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                    onClick={()=>{markTodoDone(item)}}
-                  />;
-          const displayEditIcon = item.todoId ===todoToEdit.todoId? '': <EditIcon color="success" />;
 
+      <Input value={value} setValue={setValue} submit={addNewTodo} button={"Add"}/>
+      <List sx={{ width: "100%",  bgcolor: "background.paper" }}>
+        {todoList.map((item) => {
           return (
             <ListItem
               key={item.todoId+item.description} // change id key!
               secondaryAction={
                   <IconButton edge="end" onClick={()=>{editTodoClick(item)}}>
-                    {displayEditIcon}
+                    <EditIcon color="success" />
                   </IconButton>
               }
+              sx={{overflow: "hidden"}}
             >
               <ListItemIcon>
-                {displayCheckbox}
+                <Checkbox
+                          edge="start"
+                          color="success"
+                          sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                          onClick={()=>{markTodoDone(item)}}
+                        />
               </ListItemIcon>
-                <Typography
-                  sx={{
-                    textDecoration:
-                      item.status === "active" ? "none" : "line-through"
-                  }}
-                  variant="subtitle1"
-                  gutterBottom
-                  component="div"
-                >
-                  {displayTodo}
-                </Typography>
+              <TextField
+                value={item.description}
+                variant="standard"
+                color="success"
+                focused
+                fullWidth
+                multiline
+                maxRows={5}
+                InputProps={{
+                  disableUnderline: true
+                }}
+              />
             </ListItem>
           );
         })}
