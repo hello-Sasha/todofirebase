@@ -11,7 +11,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 export const Input=({value, setValue, submit, button})=>{
   const [errorMessage, setErrorMessage ]= useState("");
   const [errorFlag, setErrorFlag ]= useState(false);
-  const [multylineProp, setMultylineProp]=useState(false);
+
   const onChangeInput=(e)=>{
     setValue(e.target.value)
     e.preventDefault();

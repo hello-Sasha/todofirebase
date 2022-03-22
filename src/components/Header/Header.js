@@ -26,7 +26,6 @@ export const Header=({isLoggedIn=true})=>{
       <Grid item xs={10}>
         <Box
           component="div"
-         // minWidth="300px"
         >
           <Grid
             container
