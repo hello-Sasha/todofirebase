@@ -1,8 +1,10 @@
 import {initializeApp} from "firebase/app";
-import {collection, getDocs, getFirestore, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import {collection, getDocs, getFirestore, addDoc, updateDoc, doc, deleteDoc,  } from "firebase/firestore";
+import {getStorage} from 'firebase/storage';
+import {getAuth} from 'firebase/auth';
 
 export const initializeAPI =()=>{
-  initializeApp({
+  const firebaseApp =initializeApp({
     apiKey: "AIzaSyBZ0ipYBtm6YgrdKGuxK3t5IFJE93PxDBM",
     authDomain: "todolist-9e0fe.firebaseapp.com",
     projectId: "todolist-9e0fe",
@@ -10,7 +12,12 @@ export const initializeAPI =()=>{
     messagingSenderId: "146029757670",
     appId: "1:146029757670:web:07dcb6d4e599c385a3a727"
   });
-  getFirestore();
+
+  getAuth(firebaseApp);
+  getFirestore(firebaseApp);
+  getStorage(firebaseApp);
+
+  return firebaseApp;
 };
 const todoListCollection ='todolist';
 

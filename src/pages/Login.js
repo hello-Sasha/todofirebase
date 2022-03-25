@@ -4,18 +4,32 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import {useAuth} from "../features/AuthContextProvider";
+import { useNavigate} from "react-router-dom";
+import {ErrorFile} from "../components/error/ErrorFile";
 
 
 
 export const Login=()=>{
+  const navigate=useNavigate();
+  const {loginWithEmailAndPassword}=useAuth();
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
+  const[error,setError]=useState('');
+
   const onSubmit=(e)=>{
-    console.log('submit');
+    loginWithEmailAndPassword(email, password)
+      .then(()=>{
+         navigate('/');
+      })
+      .catch((e)=>{
+        setError(e.message);
+      })
     e.preventDefault();
   }
-
   return (
+    <>
+      <ErrorFile error={"hello"} setError={setError}/>
     <Box  sx={{display: 'flex', justifyContent: 'center' }}   >
       <Box
         component="form"
@@ -32,6 +46,7 @@ export const Login=()=>{
         noValidate
         autoComplete="on"
       >
+
         <Stack
           direction="column"
           justifyContent="center"
@@ -51,7 +66,8 @@ export const Login=()=>{
       </Box>
 
     </Box>
-
+  <p>{error}</p>
+    </>
 
   )
 }

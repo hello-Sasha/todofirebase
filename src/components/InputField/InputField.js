@@ -12,7 +12,7 @@ export const InputField=({value, setValue, label})=>{
   return(
     <>
       <TextField
-        id="outlined-required"
+        id={value}
         label={label}
         value={value}
         onChange={onInputChange}

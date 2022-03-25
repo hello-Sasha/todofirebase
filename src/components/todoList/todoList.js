@@ -26,7 +26,7 @@ export  const TodoList = ()=>{
   const[todoToEditTrans, setTodoToEditTrans]=useState("");
   const[alertMessage, setAlertMessage]=useState('');
   const[snackBarMessage, setSnackBarMessage]=useState("");
-  const[todoID, setTodoID]=useState("");
+
 
   useEffect(()=>{
     (async()=>{
@@ -53,10 +53,12 @@ export  const TodoList = ()=>{
   },[todoList]);
 
   const addNewTodo= async (e)=>{
+    const dateToday= Date.now();
     const data = {
       "userId":1,
       "description":value,
-      "active":true
+      "active":true,
+      "created": dateToday
     };
     await addNewTodos(data)
       .then((response)=>{
@@ -65,7 +67,8 @@ export  const TodoList = ()=>{
           "userId":1,//UPDATE WITH LOGIN USER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           "id": response,
           "description":value,
-          "active":true
+          "active":true,
+          "created": dateToday
           }
         ]);
       })
@@ -122,7 +125,6 @@ export  const TodoList = ()=>{
 
   return (
     <>
-      <p>todoID:{todoID}</p>
       <Modal
         component={
         <Input
