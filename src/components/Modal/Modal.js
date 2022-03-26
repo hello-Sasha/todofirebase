@@ -53,8 +53,6 @@ export const Modal= ({component, open, setOpen})=> {
         <Box sx={{margin:"20px"}}>
           {component}
         </Box>
-
-
       </Dialog>
     </div>
   );

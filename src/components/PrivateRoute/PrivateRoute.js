@@ -8,7 +8,17 @@ export const PrivateRoute = ({children})=>{
   const isAuthenticate = useAuth().isAuthenticate;
 
   return (
-    isAuthenticate ===null? <Box><CircularProgress/></Box>:
+    isAuthenticate ===null?
+      <Box
+        sx={{display: 'flex',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}
+      >
+        <CircularProgress color="success"
+                          size={150}
+        />
+      </Box>:
       isAuthenticate ===true? children:
         <Navigate to="/login" />
   )

@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
 import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
 
 
-export const InputField=({value, setValue, label})=>{
+export const InputField=({value, setValue, label, errorMessage=null})=>{
+
+
   const onInputChange=(e)=>{
     setValue(e.target.value);
     e.preventDefault()
   }
 
-  const type = label==="password"? "password":"text";
+  const errorFlag=errorMessage? true: false;
+  const type = label.includes("password")? "password":"text";
   return(
     <>
       <TextField
@@ -18,7 +22,10 @@ export const InputField=({value, setValue, label})=>{
         onChange={onInputChange}
         type={type}
         fullWidth={true}
+        error={errorFlag}
+        helperText={errorMessage}
       />
+
     </>
   )
 }

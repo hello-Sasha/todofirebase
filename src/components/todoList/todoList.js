@@ -14,6 +14,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import {Input} from "../Input/Input";
 import {Modal} from "../Modal/Modal";
 import Snackbar from '@mui/material/Snackbar';
+import {ErrorFile} from "../error/ErrorFile";
 
 
 
@@ -25,6 +26,7 @@ export  const TodoList = ()=>{
   const[todoToEdit, setTodoToEdit]=useState("");
   const[todoToEditTrans, setTodoToEditTrans]=useState("");
   const[alertMessage, setAlertMessage]=useState('');
+  const[errorMessage, setErrorMessage]=useState("");
   const[snackBarMessage, setSnackBarMessage]=useState("");
 
 
@@ -73,30 +75,21 @@ export  const TodoList = ()=>{
         ]);
       })
       .catch((e)=>{
-        setSnackBarMessage(`Something went wrong: ${e.message}`)
+        setErrorMessage(e.message)
       });
 
     setValue('');
     e.preventDefault();
   }
   const markTodoDone = (item) => {
-      //mark as done
       setTodoList((prevState) => [...prevState.map((todo)=> todo.id === item.id? {...item, active:false}: todo)]); //at local store
-      // updateTodo(item.id, {...todoList.filter((todo)=>todo.id===item.id), active: false})////// at the db
-      //   .then(()=>{
-      //     setSnackBarMessage(`Todo set as Done. Hooray!`)
-      //   })
-      //   .catch((e)=>{
-      //     setSnackBarMessage(`Something went wrong: ${e.message}`)
-      //   });
       deleteTodo(item.id)
         .then(()=>{
           setSnackBarMessage(`Todo set as Done and Deleted. Hooray!`)
         })
         .catch((e)=>{
-          setSnackBarMessage(`Something went wrong: ${e.message}`)
+          setErrorMessage(e.message)
         });
-      //remove in 2 sec
       const removeElement =()=>{
         setTodoList((prevState) => [...prevState.filter((todo)=> todo.id !== item.id)]);
       }
@@ -109,19 +102,23 @@ export  const TodoList = ()=>{
     setOpenModal(true);
   };
   const saveEditedTodo=(e)=>{
-      setTodoList((prevState) => [...prevState.map((todo)=> todo.id === todoToEdit.id? {...todo, description: todoToEditTrans}: todo)]);
       updateTodo(todoToEdit.id, {...todoList.filter((todo)=>todo.id===todoToEdit.id), description: todoToEditTrans})//////
         .then(()=>{
-          setSnackBarMessage(`Todo Edited. Hooray!`)
+          setSnackBarMessage(`Todo Edited. Hooray!`);
+          setTodoList((prevState) => [...prevState.map((todo)=> todo.id === todoToEdit.id? {...todo, description: todoToEditTrans}: todo)]);
         })
         .catch((e)=>{
-          setSnackBarMessage(`Something went wrong: ${e.message}`)
+          setErrorMessage(e.message)
         });
       setTodoToEdit('');
       setTodoToEditTrans('');
       setOpenModal(false);
     e.preventDefault();
   }
+  const showError =
+    errorMessage!==""?
+      <ErrorFile error={errorMessage} setError={setErrorMessage}/>
+      : "";
 
   return (
     <>
@@ -137,6 +134,7 @@ export  const TodoList = ()=>{
         open={openModal}
         setOpen={setOpenModal}/>
       <Input value={value} setValue={setValue} submit={addNewTodo} button={"Add"}/>
+        {showError}
         {alertMessage}
       <List sx={{ width: "100%",  bgcolor: "background.paper" }}>
         {todoList.map((item) => {
@@ -176,11 +174,12 @@ export  const TodoList = ()=>{
         })}
       </List>
       <Snackbar
+        severity="success"
         open={snackBarMessage!==""? true: false}
         autoHideDuration={6000}
-        onClose={handleCloseSnackBar}
-        message={snackBarMessage}
-      />
+      >
+        <Alert onClose={handleCloseSnackBar} severity="success" sx={{ width: '100%' }}>{snackBarMessage}</Alert>
+      </Snackbar>
     </>
   )
 }

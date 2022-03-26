@@ -15,7 +15,7 @@ export const Login=()=>{
   const {loginWithEmailAndPassword}=useAuth();
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
-  const[error,setError]=useState('');
+  const[errorMessage,setErrorMessage]=useState('');
 
   const onSubmit=(e)=>{
     loginWithEmailAndPassword(email, password)
@@ -23,13 +23,18 @@ export const Login=()=>{
          navigate('/');
       })
       .catch((e)=>{
-        setError(e.message);
+        setErrorMessage(e.message);
       })
     e.preventDefault();
-  }
+  };
+  const showError =
+    errorMessage!==""?
+      <ErrorFile error={errorMessage} setError={setErrorMessage}/>
+      : "";
+
   return (
     <>
-      <ErrorFile error={"hello"} setError={setError}/>
+      {showError}
     <Box  sx={{display: 'flex', justifyContent: 'center' }}   >
       <Box
         component="form"
@@ -46,7 +51,6 @@ export const Login=()=>{
         noValidate
         autoComplete="on"
       >
-
         <Stack
           direction="column"
           justifyContent="center"
@@ -64,9 +68,7 @@ export const Login=()=>{
           </Container>
         </Stack>
       </Box>
-
     </Box>
-  <p>{error}</p>
     </>
 
   )

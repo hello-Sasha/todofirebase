@@ -8,24 +8,23 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Tooltip from '@mui/material/Tooltip';
+import {ErrorFile} from "../error/ErrorFile";
 
 
 
 
 export const Header=()=>{
+  const [errorMessage, setErrorMessage]=useState("");
   let navigate=useNavigate();
   const isAuthenticate = useAuth().isAuthenticate;
   const logOut = useAuth().logOut;
   const logOutClick=()=>{
-    console.log('sdsf');
-    // clear locatstorage+session storage
-    // loogout firebase
     logOut()
       .then(()=>{
         navigate('/login');
       })
       .catch((e)=>{
-        console.log(e.message); //!!!create Err component
+        setErrorMessage(e.message);
       });
   }
 
@@ -34,8 +33,16 @@ export const Header=()=>{
           <Tooltip title="Logout">
             <LogoutIcon sx={{ fontSize: 40,  color: "#4caf50" }} onClick={logOutClick}/>
           </Tooltip>
-      </Grid>:"";
+        </Grid>
+        :"";
+
+  const showError =
+    errorMessage!==""?
+      <ErrorFile error={errorMessage} setError={setErrorMessage}/>
+      : "";
+
   return (
+    <>
     <Grid
       container
       spacing={0}
@@ -43,7 +50,7 @@ export const Header=()=>{
       alignItems="center"
       justifyContent="center"
     >
-      <Grid item xs={10}>
+      <Grid item xs={10} onClick={()=>navigate('/')}>
         <Box
           component="div"
         >
@@ -73,7 +80,8 @@ export const Header=()=>{
       </Grid>
       {showLogoutButton}
     </Grid>
-
+      {showError}
+    </>
 
   )
 }
