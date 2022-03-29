@@ -1,7 +1,8 @@
 import {initializeApp} from "firebase/app";
-import {collection, getDocs, getFirestore, addDoc, updateDoc, doc, deleteDoc,  } from "firebase/firestore";
+import {collection, getDocs, getFirestore, addDoc, updateDoc, doc, deleteDoc} from "firebase/firestore";
 import {getStorage} from 'firebase/storage';
 import {getAuth} from 'firebase/auth';
+import {useAuth} from "./features/AuthContextProvider";
 
 export const initializeAPI =()=>{
   const firebaseApp =initializeApp({
@@ -19,14 +20,18 @@ export const initializeAPI =()=>{
 
   return firebaseApp;
 };
-const todoListCollection ='todolist';
+// const todoListCollection ='todolist';
+const usersCollection ='users';
+
+
 
 
 export const getTodos= async()=>{
+  const user=getAuth();
   const db=getFirestore();
   const todoList=[];
   try{
-    const querySnapshot = await getDocs(collection(db, todoListCollection));
+    const querySnapshot = await getDocs(collection(db, usersCollection,`${user.currentUser.uid}/todos` ));//change for uid!!!!!!
     querySnapshot.forEach((doc) => { //preudo array
       todoList.push({
         id: doc.id,
@@ -39,10 +44,29 @@ export const getTodos= async()=>{
   return todoList;
 };
 
+// export const getTodos= async()=>{
+//   const db=getFirestore();
+//   const todoList=[];
+//   try{
+//     const querySnapshot = await getDocs(collection(db, todoListCollection));
+//     querySnapshot.forEach((doc) => { //preudo array
+//       todoList.push({
+//         id: doc.id,
+//         ...doc.data()
+//       });
+//     });
+//   }catch(e){
+//     return Promise.reject(e);
+//   }
+//   return todoList;
+// };
+
 export const addNewTodos= async(data)=>{
   const db=getFirestore();
+  const user=getAuth();
   try{
-   const docRef= await addDoc(collection(db, todoListCollection), data);
+   //const docRef= await addDoc(collection(db, todoListCollection), data);
+    const docRef= await addDoc(collection(db, usersCollection, `${user.currentUser.uid}/todos`), data);
    return docRef.id;
   } catch(e){
     return Promise.reject(e);
@@ -50,9 +74,10 @@ export const addNewTodos= async(data)=>{
 };
 
 export const updateTodo= async(id, data)=>{
+  const user=getAuth();
   const db=getFirestore();
   try {
-    const todo = doc(db, todoListCollection, id);
+    const todo = doc(db, usersCollection,`${user.currentUser.uid}/todos`, id);
     await updateDoc(todo, data);
   } catch(e){
     return Promise.reject(e);
@@ -60,9 +85,10 @@ export const updateTodo= async(id, data)=>{
 };
 
 export const deleteTodo= async(id)=>{
+  const user=getAuth();
   const db=getFirestore();
   try {
-    await deleteDoc(doc(db, todoListCollection, id));
+    await deleteDoc(doc(db, usersCollection,`${user.currentUser.uid}/todos`, id));
   } catch(e){
     return Promise.reject(e);
   }

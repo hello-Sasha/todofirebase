@@ -5,8 +5,9 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import {useAuth} from "../features/AuthContextProvider";
-import { useNavigate} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import {ErrorFile} from "../components/error/ErrorFile";
+import Typography from "@mui/material/Typography";
 
 
 
@@ -19,7 +20,7 @@ export const Login=()=>{
 
   const onSubmit=(e)=>{
     loginWithEmailAndPassword(email, password)
-      .then(()=>{
+      .then((res)=>{
          navigate('/');
       })
       .catch((e)=>{
@@ -35,7 +36,7 @@ export const Login=()=>{
   return (
     <>
       {showError}
-    <Box  sx={{display: 'flex', justifyContent: 'center' }}   >
+    <Box  sx={{display: 'flex', justifyContent: 'center' }}>
       <Box
         component="form"
         onSubmit={onSubmit}
@@ -51,6 +52,9 @@ export const Login=()=>{
         noValidate
         autoComplete="on"
       >
+        <Typography variant="h4" gutterBottom component="div" color="#1b5e20" align="center">
+          Login
+        </Typography>
         <Stack
           direction="column"
           justifyContent="center"
@@ -69,6 +73,15 @@ export const Login=()=>{
         </Stack>
       </Box>
     </Box>
+      <Typography mt={2} variant="subtitle1" gutterBottom component="div" color="#1b5e20" align="center">
+        Don't have an account yet?
+      </Typography>
+
+      <Typography mt={1} variant="subtitle1" gutterBottom component="div" align="center">
+        <Button  color="success" onClick={()=>navigate('/signup')}>
+          <b>Create new account</b>
+        </Button>
+      </Typography>
     </>
 
   )

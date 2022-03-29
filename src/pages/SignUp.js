@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from "@mui/material/Typography";
 import {useNavigate} from "react-router-dom";
+import {ErrorFile} from "../components/error/ErrorFile";
 
 
 
@@ -16,13 +17,17 @@ export const SignUp= () =>{
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
   const[passwordRep,setPasswordRep]=useState('');
+  const[errorMessage,setErrorMessage]=useState('');
   const[inputErrors,setInputErrors]=useState({
     email: null,
     password: null,
     passwordRep: null
   });
+  const showError =
+    errorMessage!==""?
+      <ErrorFile error={errorMessage} setError={setErrorMessage}/>
+      : "";
   const onSubmit=(e)=>{
-    console.log('submit');
     if(email===''){
       setInputErrors(prevState =>(
         {
@@ -52,12 +57,14 @@ export const SignUp= () =>{
         navigate('/');
       })
       .catch((e)=>{
-        console.log(e.message);
+        setErrorMessage(e.message);
       })
     e.preventDefault();
   }
 
   return (
+    <>
+      {showError}
     <Box  sx={{display: 'flex', justifyContent: 'center' }}   >
       <Box
         component="form"
@@ -98,7 +105,16 @@ export const SignUp= () =>{
       </Box>
 
     </Box>
+      <Typography mt={2} variant="subtitle1" gutterBottom component="div" color="#1b5e20" align="center">
+        Already have an account?
+      </Typography>
 
+      <Typography mt={1} variant="subtitle1" gutterBottom component="div" align="center">
+        <Button  color="success" onClick={()=>navigate('/login')}>
+          <b>Login</b>
+        </Button>
+      </Typography>
+    </>
 
   )
 }

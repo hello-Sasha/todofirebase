@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {addNewTodos, deleteTodo, getTodos, updateTodo} from "../../api";
 
+
 import Checkbox from "@mui/material/Checkbox";
 import EditIcon from "@mui/icons-material/Edit";
 import List from "@mui/material/List";
@@ -19,7 +20,6 @@ import {ErrorFile} from "../error/ErrorFile";
 
 
 export  const TodoList = ()=>{
-
   const [todoList, setTodoList] = useState([]);
   const [openModal, setOpenModal] = React.useState(false);
   const [value, setValue] = useState('');
@@ -57,7 +57,6 @@ export  const TodoList = ()=>{
   const addNewTodo= async (e)=>{
     const dateToday= Date.now();
     const data = {
-      "userId":1,
       "description":value,
       "active":true,
       "created": dateToday
@@ -65,12 +64,8 @@ export  const TodoList = ()=>{
     await addNewTodos(data)
       .then((response)=>{
         setSnackBarMessage(`Todo created. Hooray!`);
-        setTodoList(prevState=>[...prevState, {
-          "userId":1,//UPDATE WITH LOGIN USER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        setTodoList(prevState=>[...prevState, {...data,
           "id": response,
-          "description":value,
-          "active":true,
-          "created": dateToday
           }
         ]);
       })
